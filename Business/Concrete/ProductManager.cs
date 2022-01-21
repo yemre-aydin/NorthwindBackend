@@ -1,4 +1,6 @@
 ﻿using Business.Abstract;
+using Business.Contants;
+using Core.Utilities.Result;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
@@ -18,36 +20,46 @@ namespace Business.Concrete
         {
             _productDal = productDal;
         }
-        public void Add(Product product)
+        public IDataResult<Product> GetById(int productId)
         {
-           // Business codes kurallar buraya yazılıyor
+            //hatalı bilgi burada dönüyor
 
+            return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
         }
 
-        public void Delete(Product product)
+        public IDataResult<List<Product>> GetList()
+        {
+            return new SuccessDataResult<List<Product>>(_productDal.GetList().ToList());
+        }
+
+        public IDataResult<List<Product>> GetListByCategory(int categoryId)
+        {
+            return new SuccessDataResult<List<Product>>(_productDal.GetList(p => p.CategoryId == categoryId).ToList());
+
+        }
+        public IResult Add(Product product)
+        {
+            //Magis String ?
+            // Business codes kurallar buraya yazılıyor
+            _productDal.Add(product);
+            return new SuccessResult(Message.ProductAdded);
+                
+         }
+
+        public IResult Delete(Product product)
         {
             _productDal.Delete(product);
+            return new SuccessResult(Message.ProductDeleted);
+
         }
 
-        public Product GetById(int productId)
-        {
-            
-            return _productDal.Get(p => p.ProductId == productId);
-        }
 
-        public List<Product> GetList()
-        {
-            return _productDal.GetList().ToList();
-        }
 
-        public List<Product> GetListByCategory(int categoryId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Update(Product product)
+        public IResult Update(Product product)
         {
             _productDal.Update(product);
+            return new SuccessResult(Message.ProductUpdated);
+
         }
     }
 }
