@@ -2,3 +2,6 @@
 
 # IDE0046: Koşullu ifadeye dönüştürme
 dotnet_style_prefer_conditional_expression_over_return = true
+
+# Default severity for all analyzer diagnostics
+dotnet_analyzer_diagnostic.severity = none
