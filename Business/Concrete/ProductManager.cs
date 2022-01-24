@@ -1,5 +1,5 @@
 ﻿using Business.Abstract;
-using Business.Contants;
+using Business.Constants;
 using Core.Utilities.Result;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
@@ -20,6 +20,11 @@ namespace Business.Concrete
         {
             _productDal = productDal;
         }
+        public IDataResult<List<Product>> GetList()
+        {
+            return new SuccessDataResult<List<Product>>(_productDal.GetList().ToList());
+        }
+
         public IDataResult<Product> GetById(int productId)
         {
             //hatalı bilgi burada dönüyor
@@ -27,10 +32,7 @@ namespace Business.Concrete
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
         }
 
-        public IDataResult<List<Product>> GetList()
-        {
-            return new SuccessDataResult<List<Product>>(_productDal.GetList().ToList());
-        }
+       
 
         public IDataResult<List<Product>> GetListByCategory(int categoryId)
         {
