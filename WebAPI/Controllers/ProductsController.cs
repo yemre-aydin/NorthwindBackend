@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using Business;
 using IProductService = Business.Abstract.IProductService;
 using Entities.Concrete;
+using Google.Apis.Admin.Directory.directory_v1.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebAPI.Controllers
 {
@@ -23,6 +25,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
+        [Authorize(Roles = "Product.List")]
 
         public IActionResult GetList()
         {
