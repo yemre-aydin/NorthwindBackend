@@ -1,4 +1,4 @@
-﻿using Castle.Core.Interceptor;
+﻿using Castle.DynamicProxy;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,6 +14,11 @@ namespace Core.Utilities.Interceptors
         public void Intercept(IInvocation invocation)
         {
             
+        }
+
+        internal object ToList()
+        {
+            throw new NotImplementedException();
         }
 
         internal void Intercept(object invocation)

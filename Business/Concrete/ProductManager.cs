@@ -1,6 +1,7 @@
 ﻿using Business.Abstract;
 using Business.Constants;
 using Business.ValidationRules.FluendValidation;
+using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Result;
 using DataAccess.Abstract;
@@ -58,7 +59,8 @@ namespace Business.Concrete
          * Auth 
          */
 
-        [ValidationAspect(typeof(ProductValidator))]
+
+        [ValidationAspect(typeof(ProductValidator),Priority =1)]
         public IResult Add(Product product)
         {
 
