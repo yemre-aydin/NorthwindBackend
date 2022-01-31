@@ -10,6 +10,7 @@ using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
 using Entities.Concrete;
 using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.VisualBasic;
 using System;
 using System.Collections.Generic;
@@ -35,12 +36,12 @@ namespace Business.Concrete
         public IDataResult<Product> GetById(int productId)
         {
             //hatalı bilgi burada dönüyor
-
+            
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
         }
 
        
-        [CacheAspect(10)]
+        [CacheAspect(10  )]
         public IDataResult<List<Product>> GetListByCategory(int categoryId)
         {
             return new SuccessDataResult<List<Product>>(_productDal.GetList(p => p.CategoryId == categoryId).ToList());

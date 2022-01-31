@@ -6,10 +6,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Business;
-using IProductService = Business.Abstract.IProductService;
+using Business.Abstract;
 using Entities.Concrete;
 using Google.Apis.Admin.Directory.directory_v1.Data;
 using Microsoft.AspNetCore.Authorization;
+using Core.Extensions;
 
 namespace WebAPI.Controllers
 {
@@ -17,15 +18,15 @@ namespace WebAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private IProductService _productService;
+        private Business.Abstract.IProductService _productService;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(Business.Abstract.IProductService productService)
         {
             _productService = productService;
         }
 
         [HttpGet("getall")]
-        [Authorize(Roles = "Product.List")]
+        //[Authorize(Roles = "Product.List")]
 
         public IActionResult GetList()
         {
