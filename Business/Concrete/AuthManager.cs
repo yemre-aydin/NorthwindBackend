@@ -38,7 +38,7 @@ namespace Business.Concrete
                 Status = true
             };
             _userService.Add(user);
-            return new SuccessDataResult<User>(user, Message.UserRegistered);
+            return new SuccessDataResult<User>(user, Messages.UserRegistered);
         }
 
 
@@ -47,14 +47,14 @@ namespace Business.Concrete
             var userToCheck = _userService.GetByMail(userForLoginDto.Email);
             if (userToCheck == null)
             {
-                return new ErrorDataResult<User>(Message.UserNotFound);
+                return new ErrorDataResult<User>(Messages.UserNotFound);
             }
             if (HashingHelper.VerifiyPasswordHash(userForLoginDto.Password, userToCheck.PasswordHash, userToCheck.PasswordSalt))
             {
-                return new ErrorDataResult<User>(Message.PasswordError);
+                return new ErrorDataResult<User>(Messages.PasswordError);
             }
 
-            return new SuccessDataResult<User>(userToCheck, Message.SuccessfullLogin);
+            return new SuccessDataResult<User>(userToCheck, Messages.SuccessfullLogin);
         }
 
         
@@ -63,7 +63,7 @@ namespace Business.Concrete
         {
             if (_userService.GetByMail(email)!=null)
             {
-                return new ErrorResult(Message.UserAlreadyExists);
+                return new ErrorResult(Messages.UserAlreadyExists);
             }
             return new SuccessResult();
         }
@@ -71,7 +71,7 @@ namespace Business.Concrete
         {
             var claims = _userService.GetClaims(user);
             var accessToken = _tokenHelper.CreateToken(user, claims);
-            return new SuccessDataResult<AccessToken>(accessToken, Message.AccessTokenCreted);
+            return new SuccessDataResult<AccessToken>(accessToken, Messages.AccessTokenCreted);
         }
     }
 }

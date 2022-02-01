@@ -1,7 +1,9 @@
 ﻿using Business.Abstract;
+using Business.BusinessAspect.Autofac;
 using Business.Constants;
 using Business.ValidationRules.FluendValidation;
 using Core.Aspects.Autofac.Caching;
+using Core.Aspects.Autofac.Performance;
 using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
@@ -16,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace Business.Concrete
 {
@@ -28,6 +31,7 @@ namespace Business.Concrete
         {
             _productDal = productDal;
         }
+        [PerformanceAspect(5)]
         public IDataResult<List<Product>> GetList()
         {
             return new SuccessDataResult<List<Product>>(_productDal.GetList().ToList());
@@ -36,11 +40,11 @@ namespace Business.Concrete
         public IDataResult<Product> GetById(int productId)
         {
             //hatalı bilgi burada dönüyor
-            
+            Thread.Sleep(5000);
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
         }
 
-       
+       [SecuredOperation("Product.List,Admin")]
         [CacheAspect(10  )]
         public IDataResult<List<Product>> GetListByCategory(int categoryId)
         {
@@ -75,14 +79,14 @@ namespace Business.Concrete
 
 
             _productDal.Add(product);
-            return new SuccessResult(Message.ProductAdded);
+            return new SuccessResult(Messages.ProductAdded);
                 
          }
 
         public IResult Delete(Product product)
         {
             _productDal.Delete(product);
-            return new SuccessResult(Message.ProductDeleted);
+            return new SuccessResult(Messages.ProductDeleted);
 
         }
 
@@ -91,7 +95,7 @@ namespace Business.Concrete
         public IResult Update(Product product)
         {
             _productDal.Update(product);
-            return new SuccessResult(Message.ProductUpdated);
+            return new SuccessResult(Messages.ProductUpdated);
 
         }
 
@@ -100,7 +104,7 @@ namespace Business.Concrete
         {
             _productDal.Update(product);
             _productDal.Add(product);
-            return new SuccessResult(Message.ProductUpdated);
+            return new SuccessResult(Messages.ProductUpdated);
         }
     }
 }

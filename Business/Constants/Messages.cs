@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Business.Constants
 {
-    public class Message
+    public class Messages
     {
         public static string ProductAdded = "Ürün Başarıyla Eklendi.";
         public static string ProductDeleted = "Ürün Başarıyla Silindi.";
@@ -15,6 +15,8 @@ namespace Business.Constants
         public static string UserAlreadyExists = "Bu Kullanıcı Zaten Mevcut.";
         public static string UserRegistered = "Kullanıcı Başarıyla Kaydedildi.";
         public static string AccessTokenCreted = "Access Token Başarıyla Oluşturuldu.";
+
+        public static string AutohorizationDenied = "Yetkiniz Yok.";
 
 
 
