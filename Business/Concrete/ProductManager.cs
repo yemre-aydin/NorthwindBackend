@@ -9,6 +9,7 @@ using Core.Aspects.Autofac.Transaction;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Caching.Logging.Log4Net.Loggers;
 using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Result;
 using DataAccess.Abstract;
 using DataAccess.Concrete.EntityFramework;
@@ -28,10 +29,12 @@ namespace Business.Concrete
     {
         //Dependency Injection Altyapısı
         private IProductDal _productDal;
-        
-        public ProductManager(IProductDal productDal)
+        private ICategoryService _categoryService;
+
+        public ProductManager(IProductDal productDal, ICategoryService categoryService)
         {
             _productDal = productDal;
+            _categoryService = categoryService;
         }
         [PerformanceAspect(5)]
         public IDataResult<List<Product>> GetList()
@@ -70,7 +73,7 @@ namespace Business.Concrete
          */
 
 
-        [ValidationAspect(typeof(ProductValidator),Priority =1)]
+        [ValidationAspect(typeof(ProductValidator), Priority = 1)]
         [CacheRemoveAspect("IProductService.Get")]
         [CacheRemoveAspect("ICategoryService.Get")]
         //bizim get olan kısımlar cache de olmalı bunları silecek
@@ -80,11 +83,45 @@ namespace Business.Concrete
             //Magis String ?
             // Business codes kurallar buraya yazılıyor
 
+            //ilk kural
+            //Eğer kurallar artarsa ne olacak
+            //resultları dönüyoruz hep , result fonksiyonları olacak
+            //iş çalıştırıcı yazsak onu da Core da yazıcaz
+            IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName), CheckIfCategoryIsEnabled());
+            //virgül ekleyip yeni yazılan kurallerı eklenebilir
+            if (result != null)
+            { 
+                return result;
 
+            }
             _productDal.Add(product);
             return new SuccessResult(Messages.ProductAdded);
-                
-         }
+
+        }
+
+        private IResult CheckIfProductNameExists(string productName)
+        {
+            if (_productDal.Get(p => p.ProductName == productName) != null)
+            {
+                return new ErrorResult(Messages.ProductNameAlreadyExists);
+            }
+            return null;
+        }
+
+        //Kurallar
+        //yeni kural eklemek istersek aşağıdaki örnek 
+        //örnek olsun diye
+        private IResult CheckIfCategoryIsEnabled()
+        {
+            var result = _categoryService.GetList();
+            if (result.Data.Count==10)
+            {
+                return new ErrorResult(Messages.ProductNameAlreadyExists);
+
+            }
+
+            return new SuccessResult();
+        }
 
         public IResult Delete(Product product)
         {
@@ -97,6 +134,10 @@ namespace Business.Concrete
 
         public IResult Update(Product product)
         {
+            if (_productDal.Get(p => p.ProductName == product.ProductName) != null)
+            {
+                return new ErrorResult(Messages.ProductNameAlreadyExists);
+            }
             _productDal.Update(product);
             return new SuccessResult(Messages.ProductUpdated);
 

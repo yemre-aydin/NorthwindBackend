@@ -18,6 +18,7 @@ namespace Business.Constants
 
         public static string AutohorizationDenied = "Yetkiniz Yok.";
 
+        public static string ProductNameAlreadyExists = "Ürün ismi zaten mevcut";
 
 
 

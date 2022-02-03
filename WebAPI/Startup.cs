@@ -69,7 +69,8 @@ namespace WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+            app.ConfigureCustomExceptionMiddleware();
+
             else
             {
                 app.UseExceptionHandler("/Error");
