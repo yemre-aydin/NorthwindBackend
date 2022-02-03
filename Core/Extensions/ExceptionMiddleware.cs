@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using FluentValidation;
 
 namespace Core.Extensions
 {
@@ -30,10 +31,16 @@ namespace Core.Extensions
             }
         }
 
-        private Task HandleExceptionAsync(HttpContext httpContext)
+        private Task HandleExceptionAsync(HttpContext httpContext,Exception e)
         {
             httpContext.Response.ContentType = "application/json";
             httpContext.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+            string message = "Internal Server System";
+            if (e.GetType()==typeof(ValidationException))
+            {
+                message = e.Message;
+            }
 
             return httpContext.Response.WriteAsync(new ErrorDetail
             {
