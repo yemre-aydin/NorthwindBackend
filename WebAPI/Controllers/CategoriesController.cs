@@ -21,7 +21,7 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet("getall")]
-        [Authorize()]
+        //[Authorize()]
 
         public IActionResult GetList()
         {

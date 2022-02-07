@@ -18,9 +18,9 @@ namespace WebAPI.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private Business.Abstract.IProductService _productService;
+        private IProductService _productService;
 
-        public ProductsController(Business.Abstract.IProductService productService)
+        public ProductsController(IProductService productService)
         {
             _productService = productService;
         }
@@ -63,9 +63,6 @@ namespace WebAPI.Controllers
             return BadRequest(result.Message);
 
         }
-
-
-
 
         [HttpPost("add")]
         public IActionResult Add(Product product)

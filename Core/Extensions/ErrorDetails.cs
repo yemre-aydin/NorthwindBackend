@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Core.Extensions
 {
-    public class ErrorDetail
+    public class ErrorDetails
     {
 
         public string Message { get; set; }

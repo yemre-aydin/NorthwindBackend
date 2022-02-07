@@ -18,16 +18,16 @@ namespace Core.Utilities.Security.Jwt
         
         public IConfiguration Configuration { get; }
         private TokenOptions _tokenOptions;
-        DateTime _accessTokenExpiratio;
+        DateTime _accessTokenExpiration;
         public JwtHelper(IConfiguration configuration)
         {
             Configuration = configuration;
             _tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
-            _accessTokenExpiratio = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
         }
 
         public AccessToken CreateToken(User user, List<OperationClaim> operationClaims)
         {
+            _accessTokenExpiration = DateTime.Now.AddMinutes(_tokenOptions.AccessTokenExpiration);
 
             var securityKey = SecurityKeyHelper.CreateSecurityKey(_tokenOptions.SecurityKey);
             var signingCredentials = SigningCredentialsHepler.CreateSigningCredentials(securityKey);
@@ -38,7 +38,7 @@ namespace Core.Utilities.Security.Jwt
             return new AccessToken
             {
                 Token = token,
-                Expiration = _accessTokenExpiratio
+                Expiration = _accessTokenExpiration
             };
         }
         public JwtSecurityToken CreateJwtSecurityToken(TokenOptions tokenOptions,User user,
@@ -47,7 +47,7 @@ namespace Core.Utilities.Security.Jwt
             var jwt = new JwtSecurityToken(
                 issuer: tokenOptions.Issuer,
                 audience:tokenOptions.Audience,
-                expires:_accessTokenExpiratio,
+                expires:_accessTokenExpiration,
                 notBefore:DateTime.Now,
                 claims:SetClaims(user,operationClaims),
                 signingCredentials:signingCredentials
@@ -62,6 +62,7 @@ namespace Core.Utilities.Security.Jwt
             claims.AddEmail(user.Email);
             claims.AddName($"{user.FirstName } {user.LastName}");
             claims.AddRoles(operationClaims.Select(c => c.Name).ToArray());
+            
             return claims;
         }
     }

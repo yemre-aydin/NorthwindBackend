@@ -1,6 +1,7 @@
 ﻿using Core.Utilities.Result;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Business.Abstract;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +9,7 @@ using System.Text;
 
 namespace Business.Concrete
 {
-    public class CategoryManager :IProductService
+    public class CategoryManager :ICategoryService
     {
         private ICategoryDal _categoryDal;
 

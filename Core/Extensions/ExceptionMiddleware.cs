@@ -22,14 +22,14 @@ namespace Core.Extensions
         {
             try
             {
-
+                await _next(httpContext);
             }
             catch (Exception e)
             {
-                await HandleExceptionAsync(httpContext);
+                await HandleExceptionAsync(httpContext,e);
                 
             }
-        }
+        }       
 
         private Task HandleExceptionAsync(HttpContext httpContext,Exception e)
         {
@@ -42,13 +42,11 @@ namespace Core.Extensions
                 message = e.Message;
             }
 
-            return httpContext.Response.WriteAsync(new ErrorDetail
+            return httpContext.Response.WriteAsync(new ErrorDetails
             {
 
                 StatusCode = httpContext.Response.StatusCode,
-                Message = "Internaş Server Error"
-
-
+                Message = message
             }.ToString());
 
         }

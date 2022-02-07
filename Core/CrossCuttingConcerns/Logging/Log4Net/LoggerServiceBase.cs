@@ -28,10 +28,10 @@ namespace Core.CrossCuttingConcerns.Caching.Logging.Log4Net
 
         }
         public bool IsInfoEnable => _log.IsInfoEnabled;//info açık mı ona bakıyor
-        public bool IsDebugEnable => _log.IsDebugEnabled;//info açık mı ona bakıyor
-        public bool IsWarnEnable => _log.IsWarnEnabled;//info açık mı ona bakıyor
-        public bool IsFatalEnable => _log.IsFatalEnabled;//info açık mı ona bakıyor
-        public bool IsErrorEnable => _log.IsErrorEnabled;//info açık mı ona bakıyor
+        public bool IsDebugEnable => _log.IsDebugEnabled;//debug açık mı ona bakıyor
+        public bool IsWarnEnable => _log.IsWarnEnabled;//warn açık mı ona bakıyor
+        public bool IsFatalEnable => _log.IsFatalEnabled;//fatalaçık mı ona bakıyor
+        public bool IsErrorEnable => _log.IsErrorEnabled;//error açık mı ona bakıyor
 
 
 
@@ -40,19 +40,35 @@ namespace Core.CrossCuttingConcerns.Caching.Logging.Log4Net
             if (IsInfoEnable)
             {
                 _log.Info(logMessage);
-            }
+            }              
+
+        }
+        public void Debug(object logMessage)
+        {
             if (IsDebugEnable)
             {
                 _log.Debug(logMessage);
             }
+
+        }
+        public void Warn(object logMessage)
+        {
             if (IsWarnEnable)
             {
                 _log.Warn(logMessage);
             }
+
+        }
+        public void Fatal(object logMessage)
+        {
             if (IsFatalEnable)
             {
                 _log.Fatal(logMessage);
             }
+
+        }
+        public void Error(object logMessage)
+        {
             if (IsErrorEnable)
             {
                 _log.Error(logMessage);

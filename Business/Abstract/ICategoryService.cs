@@ -10,6 +10,6 @@ namespace Business.Abstract
     {
 
         IDataResult<List<Category>> GetList();
-        object GetListByCategory(int categoryId);
+        
     }
 }

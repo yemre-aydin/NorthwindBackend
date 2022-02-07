@@ -40,14 +40,16 @@ namespace WebAPI
 
             var tokenOptions = Configuration.GetSection("TokenOptions").Get<TokenOptions>();
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
-                    ValidIssuer=tokenOptions.Audience,
+                    ValidIssuer=tokenOptions.Issuer,
+                    ValidAudience=tokenOptions.Audience,
                     ValidateIssuerSigningKey=true,
                     IssuerSigningKey=SecurityKeyHelper.CreateSecurityKey(tokenOptions.SecurityKey) 
 
@@ -70,17 +72,17 @@ namespace WebAPI
                 app.UseDeveloperExceptionPage();
             }
             app.ConfigureCustomExceptionMiddleware();
-
+            /*
             else
             {
                 app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
-            }
+            }*/
             app.UseCors(builder => builder.WithOrigins("https://localhost:44378").AllowAnyHeader());
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            //app.UseStaticFiles();
 
             app.UseRouting();
             app.UseAuthentication();  

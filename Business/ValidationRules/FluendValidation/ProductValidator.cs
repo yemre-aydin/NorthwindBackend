@@ -13,6 +13,7 @@ namespace Business.ValidationRules.FluendValidation
         {
             RuleFor(p => p.ProductName).NotEmpty();//boş olamaz kuralı
             RuleFor(p => p.ProductName).Length(2, 30);
+            RuleFor(p => p.UnitPrice).GreaterThanOrEqualTo(1);
             RuleFor(p => p.UnitPrice).GreaterThanOrEqualTo(10).When(p => p.CategoryId == 1);
             RuleFor(p => p.ProductName).Must(StartWithWithA);
         }

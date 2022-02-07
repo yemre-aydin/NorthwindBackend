@@ -37,6 +37,7 @@ namespace Core.DataAccess.EntityFramework
             using (var context = new TContext())
             {//get operasyonu abone olma operasyonu select sorgularını yazıyoruz.
                 //verdiğimiz filtreye göre o datanın gelmesi burada sağlanıyor
+                
                 return context.Set<TEntity>().SingleOrDefault(filter);
             }
         }

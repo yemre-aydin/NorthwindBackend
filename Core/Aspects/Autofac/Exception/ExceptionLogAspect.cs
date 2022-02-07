@@ -36,6 +36,7 @@ namespace Core.Aspects.Autofac.Exception
         private LogDetailWithException GetLogDetail(IInvocation invocation)
         {
             var logParameters = new List<LogParameter>();
+
             for (int i = 0; i < invocation.Arguments.Length; i++)
             {
                 logParameters.Add(new LogParameter

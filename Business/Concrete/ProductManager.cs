@@ -36,22 +36,27 @@ namespace Business.Concrete
             _productDal = productDal;
             _categoryService = categoryService;
         }
-        [PerformanceAspect(5)]
-        public IDataResult<List<Product>> GetList()
-        {
-            return new SuccessDataResult<List<Product>>(_productDal.GetList().ToList());
-        }
 
         public IDataResult<Product> GetById(int productId)
         {
             //hatalı bilgi burada dönüyor
-            Thread.Sleep(5000);
+            
             return new SuccessDataResult<Product>(_productDal.Get(p => p.ProductId == productId));
         }
 
-        [SecuredOperation("Product.List,Admin")]
-        [CacheAspect(10)]
+        [PerformanceAspect(5)]
+        public IDataResult<List<Product>> GetList()
+        {
+            Thread.Sleep(5000);
+            return new SuccessDataResult<List<Product>>(_productDal.GetList().ToList());
+        }
+
+       
+
+        //[SecuredOperation("Product.List,Admin")]
         [LogAspect(typeof(FileLogger))]
+        [CacheAspect(duration:10)]
+
         public IDataResult<List<Product>> GetListByCategory(int categoryId)
         {
             return new SuccessDataResult<List<Product>>(_productDal.GetList(p => p.CategoryId == categoryId).ToList());
@@ -75,7 +80,7 @@ namespace Business.Concrete
 
         [ValidationAspect(typeof(ProductValidator), Priority = 1)]
         [CacheRemoveAspect("IProductService.Get")]
-        [CacheRemoveAspect("ICategoryService.Get")]
+        //[CacheRemoveAspect("ICategoryService.Get")]
         //bizim get olan kısımlar cache de olmalı bunları silecek
         public IResult Add(Product product)
         {
@@ -87,8 +92,10 @@ namespace Business.Concrete
             //Eğer kurallar artarsa ne olacak
             //resultları dönüyoruz hep , result fonksiyonları olacak
             //iş çalıştırıcı yazsak onu da Core da yazıcaz
+            
             IResult result = BusinessRules.Run(CheckIfProductNameExists(product.ProductName), CheckIfCategoryIsEnabled());
             //virgül ekleyip yeni yazılan kurallerı eklenebilir
+            
             if (result != null)
             { 
                 return result;
@@ -101,11 +108,12 @@ namespace Business.Concrete
 
         private IResult CheckIfProductNameExists(string productName)
         {
-            if (_productDal.Get(p => p.ProductName == productName) != null)
+            var result = _productDal.GetList(p => p.ProductName == productName).Any();
+            if (result)
             {
                 return new ErrorResult(Messages.ProductNameAlreadyExists);
             }
-            return null;
+            return new SuccessResult();
         }
 
         //Kurallar
@@ -114,7 +122,7 @@ namespace Business.Concrete
         private IResult CheckIfCategoryIsEnabled()
         {
             var result = _categoryService.GetList();
-            if (result.Data.Count==10)
+            if (result.Data.Count<10)
             {
                 return new ErrorResult(Messages.ProductNameAlreadyExists);
 
@@ -131,13 +139,9 @@ namespace Business.Concrete
         }
 
 
-
         public IResult Update(Product product)
         {
-            if (_productDal.Get(p => p.ProductName == product.ProductName) != null)
-            {
-                return new ErrorResult(Messages.ProductNameAlreadyExists);
-            }
+            
             _productDal.Update(product);
             return new SuccessResult(Messages.ProductUpdated);
 
@@ -147,7 +151,7 @@ namespace Business.Concrete
         public IResult TransactionalOperation(Product product)
         {
             _productDal.Update(product);
-            _productDal.Add(product);
+           // _productDal.Add(product);
             return new SuccessResult(Messages.ProductUpdated);
         }
     }

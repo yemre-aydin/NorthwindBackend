@@ -15,9 +15,5 @@ namespace Core.CrossCuttingConcerns.Caching.Logging
         public List<LogParameter> LogParameters { get; set; }
 
 
-
-
-
-
     }
 }

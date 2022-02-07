@@ -12,6 +12,8 @@ namespace Core.Aspects.Autofac.Performance
     public class PerformanceAspect:MethodInterception
     {
         private int _interval;//geçen süre
+        private Stopwatch _stopWatch;//kronometre görevi görecek.
+
 
         public PerformanceAspect(int interval)
         {
@@ -19,7 +21,6 @@ namespace Core.Aspects.Autofac.Performance
             _stopWatch = ServiceTool.ServiceProvider.GetService<Stopwatch>();
         }
 
-        private Stopwatch _stopWatch;//kronometre görevi görecek.
 
 
         protected override void OnBefore(IInvocation invocation)
